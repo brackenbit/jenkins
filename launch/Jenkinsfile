@@ -1,0 +1,31 @@
+// Demo pipeline to show use of script / if statement
+
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(defaultValue: false, description: "Confirm build?", name: "buildConfirmed")
+    }
+
+    stages {
+        stage("Demo") {
+            steps {
+                // "script" block allows you to include e.g. if statement
+                script {
+                    if (params.buildConfirmed == false) {
+                        echo "Build was not confirmed, exiting."
+                        // Tag current build as a success to avoid throwing off metrics
+                        currentBuild.result = "SUCCESS"
+                        // Return early, cancelling build.
+                        return
+                    } else {
+                        echo "Build was confirmed."
+                    }
+
+                    
+                }
+            }
+        }
+
+    }
+}

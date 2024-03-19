@@ -1,0 +1,25 @@
+// Demo pipeline to show use of parameters
+
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(defaultValue: false, description: "Enable service?", name: "myBoolean")
+        // 'text' and 'string' are both supported; difference is 'text' supports multiline.
+        string(defaultValue: "NO_ID", description: "Identifier for build?", name: "deployId")
+        // No need to set defaultValue for choice - it automatically defaults to first option.
+        choice(choices: ["TEST", "DEV", "QA", "PRE-PROD", "PROD"], description: "Which environment to deploy to?", name: "deployEnv")
+    }
+
+    stages {
+        stage("Demo") {
+            steps {
+                // Remember "params." required for booleanParam
+                echo "booleanParam is set to: ${params.myBoolean}"
+                echo "string is set to: ${deployId}"
+                echo "choice is set to: ${deployEnv}"
+            }
+        }
+
+    }
+}

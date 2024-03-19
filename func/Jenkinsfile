@@ -1,0 +1,39 @@
+// Demo pipeline to show use of functions
+
+pipeline {
+    agent any
+
+    environment {
+        def myNumber = 12
+    }
+
+    stages {
+        stage("Demo") {
+            steps {
+                myFunc("Hello from the Demo stage!")
+            }
+        }
+        stage("Repeat") {
+            steps {
+                repeatMessage("Hello!", 6)
+            }
+        }
+
+    }
+}
+
+// functions are defined outside the pipeline
+def myFunc(String myText) {
+    echo "myFunc was called with: ${myText}"
+
+    // Groovy variable scope means only variables passed as argument
+    // are accessible in function.
+    // e.g. This would fail:
+    // echo "myNumber is: ${myNumber}"
+}
+
+def repeatMessage(String message, int repeats) {
+    for (int i = 0; i < repeats; i++) {
+        echo "${message}"
+    }
+}

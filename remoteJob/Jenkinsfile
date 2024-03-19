@@ -1,0 +1,31 @@
+// Demo pipeline to show calling one Jenkins pipeline from within another
+
+pipeline {
+    agent any
+    
+    stages {
+        stage("Demo") {
+            steps {
+                echo "Demo stage run."
+            }
+        }
+        
+        stage("Build Remote") {
+            steps {
+                echo "Triggering Variable Pipeline job"
+                // build '<name of other pipeline>'
+                // triggers another Jenkins pipeline.
+                build 'Variable Pipeline'
+
+                // To trigger a parameterised pipeline requires a bit of boilerplate:
+                build job: 'Parameterised Pipeline', parameters: [
+                    [$class: 'BooleanParameterValue', name: 'myBoolean', value: true],
+                    [$class: 'StringParameterValue', name: 'deployId', value: "someBuild"],
+                    // 'choices' must be treated as strings
+                    // So long as the value is a valid choice, this works.
+                    [$class: 'StringParameterValue', name: 'deployEnv', value: "DEV"],
+                ]
+            }
+        }
+    }
+}

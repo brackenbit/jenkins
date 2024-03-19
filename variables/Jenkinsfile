@@ -1,0 +1,32 @@
+// Demo pipeline to show use of variables
+
+pipeline {
+    agent any
+
+    // Variables are defined in environment block
+    environment {
+        def myString = "Hello World"
+        def myNumber = 10
+        def myNonIntNumber = 11.11
+        def myBoolean = true
+    }
+
+    // Jenkins-specific environment variables are exposed via the global variable "env"
+    // (No user action required.)
+
+    stages {
+        stage("Demo") {
+            steps {
+                echo "myString: ${myString}"
+                echo "myNumber: ${myNumber}"
+                echo "myNonIntNumber: ${myNonIntNumber}"
+                echo "myBoolean: ${myBoolean}"
+
+                // Using Jenkins environment variables:
+                echo "Built ${env.JOB_NAME} on ${env.JENKINS_URL}"
+                echo "Build number: ${env.BUILD_NUMBER}"
+                // Could be used to e.g. set tag when uploading built image.
+            }
+        }
+    }
+}
